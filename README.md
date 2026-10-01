@@ -43,12 +43,12 @@ _Fill in from `results/*.csv` after running._
 
 | Retriever | Recall@5 | MRR@10 | EM | F1 | Refusal acc. | p50 latency |
 |---|---|---|---|---|---|---|
-| closed-book | – | – | | | | |
-| TF-IDF | | | | | | |
-| BM25 | | | | | | |
-| Dense | | | | | | |
-| Dense, fine-tuned | | | | | | |
-| Hybrid + rerank | | | | | | |
+| closed-book | – | – | | | | - |
+| TF-IDF | 0.9238 | 0.8284 | | | | 1.1333 |
+| BM25 | 0.9312 | 0.853 | | | | 1.0988 |
+| Dense | 0.9062 | 0.7883 | | | | 13.6244 |
+| Dense, fine-tuned | 0.9197 | 0.8072 | | | | 13.4986 |
+| Hybrid + rerank | 0.9843 | 0.9367 | | | | 245.6712 |
 | oracle | 1.000 | 1.000 | | | | |
 
 ## Run it
