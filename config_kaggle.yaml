@@ -1,0 +1,50 @@
+# Kaggle (free 2x T4) version of config.yaml: generator served by Ollama instead of vLLM.
+seed: 42
+
+data:
+  dataset: rajpurkar/squad_v2   # Hugging Face dataset id
+  split: validation             # SQuAD 2.0 dev set (the official test set is hidden)
+
+retrieval:
+  depth: 10                 # ranks beyond this count as a miss for MRR / nDCG
+  recall_ks: [1, 5, 10]
+  latency_sample: 200       # single-query searches timed per retriever
+  tfidf:
+    sublinear_tf: true      # use 1 + log(tf) instead of raw counts
+  bm25:
+    k1: 1.5                 # term-frequency saturation
+    b: 0.75                 # document-length normalisation
+  dense:                    # pretrained, used as-is
+    model: BAAI/bge-small-en-v1.5
+    query_prefix: "Represent this sentence for searching relevant passages: "
+    batch_size: 128
+  dense_ft:                 # same base model after `python -m ragbench.train`
+    model: models/bge-small-squad
+    query_prefix: "Represent this sentence for searching relevant passages: "
+    batch_size: 128
+  hybrid:
+    candidates: 50          # top-N taken from BM25 and dense before fusion
+    rrf_k: 60               # Reciprocal Rank Fusion constant
+    reranker: cross-encoder/ms-marco-MiniLM-L-6-v2
+    batch_size: 256
+
+training:                   # contrastive fine-tuning of the dense retriever
+  base_model: BAAI/bge-small-en-v1.5
+  output_dir: models/bge-small-squad
+  max_pairs: 20000          # one question per unique SQuAD train paragraph
+  epochs: 1
+  batch_size: 64            # = 63 in-batch negatives per question
+  lr: 2.0e-5
+  warmup_ratio: 0.1
+
+generation:
+  base_url: http://localhost:11434/v1  # Ollama OpenAI-compatible server
+  model: qwen2.5:7b         # 4-bit quantised build served by Ollama
+  top_k_context: 3          # passages placed in the prompt
+  max_tokens: 32
+  temperature: 0.0
+  workers: 4                # matches OLLAMA_NUM_PARALLEL
+  n_per_class: 250          # 250 answerable + 250 unanswerable questions
+
+paths:
+  results: results
