@@ -1,4 +1,4 @@
-# squad-rag-bench
+# Squad RAG Bench
 
 A controlled comparison of retrieval methods for Retrieval-Augmented Generation (RAG), including a dense retriever fine-tuned for the task. The generator, prompt and data are fixed; only the retriever changes, so differences in answer quality are attributable to retrieval.
 
@@ -39,7 +39,6 @@ question ──► retriever (1 of 4) ──► top-3 passages ──► prompt 
 
 ## Results
 
-_Fill in from `results/*.csv` after running._
 
 | Retriever | Recall@5 | MRR@10 | EM | F1 | Refusal acc. | p50 latency |
 |---|---|---|---|---|---|---|
